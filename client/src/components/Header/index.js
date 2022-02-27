@@ -1,44 +1,65 @@
-import React from 'react';
-import { Link } from 'react-router-dom';
+import React from 'react'
+import { Link } from 'react-router-dom'
 
-import Auth from '../../utils/auth';
+import Auth from '../../utils/auth'
+import Container from '../Container'
+
+const Logo = () => {
+    return (
+        <div>
+            <Link className="text-light" to="/">
+                <h3 className=" text-xl font-medium">CoinTracker</h3>
+            </Link>
+        </div>
+    )
+}
+
+const NavLink = ({ children, to }) => {
+    return (
+        <Link className="font-medium mx-2" to={to}>
+            {children}
+        </Link>
+    )
+}
+
+const Nav = ({ logout }) => {
+    if (Auth.loggedIn()) {
+    }
+    return (
+        <nav>
+            {Auth.loggedIn() ? (
+                <>
+                    {/* <span>Hey there, {Auth.getProfile().data.username}!</span> */}
+                    <button
+                        className="font-medium  px-4 py-1 rounded-full bg-gradient-to-r from-pink-500 to-yellow-600"
+                        onClick={logout}
+                    >
+                        Logout
+                    </button>
+                </>
+            ) : (
+                <>
+                    <NavLink to="/login">Login</NavLink>
+                    <NavLink to="/signup">Signup</NavLink>
+                </>
+            )}
+        </nav>
+    )
+}
 
 const Header = () => {
-  const logout = (event) => {
-    event.preventDefault();
-    Auth.logout();
-  };
-  return (
-    <header className="bg-primary text-light mb-4 py-3 flex-row align-center">
-      <div className="container flex-row justify-space-between-lg justify-center align-center">
-        <div>
-          <Link className="text-light" to="/">
-            <h1 className="m-0">Project Name</h1>
-          </Link>
-          <p className="m-0">This is a sub-title</p>
-        </div>
-        <div>
-          {Auth.loggedIn() ? (
-            <>
-              <span>Hey there, {Auth.getProfile().data.username}!</span>
-              <button className="btn btn-lg btn-light m-2" onClick={logout}>
-                Logout
-              </button>
-            </>
-          ) : (
-            <>
-              <Link className="btn btn-lg btn-info m-2" to="/login">
-                Login
-              </Link>
-              <Link className="btn btn-lg btn-light m-2" to="/signup">
-                Signup
-              </Link>
-            </>
-          )}
-        </div>
-      </div>
-    </header>
-  );
-};
+    const logout = event => {
+        event.preventDefault()
+        Auth.logout()
+    }
+    return (
+        <header className="bg-gradient-to-r from-cyan-500 to-blue-500 py-4 text-white">
+            <Container className="flex justify-between">
+                <Logo />
+                <Nav />
+            </Container>
+        </header>
+    )
+}
 
-export default Header;
+export default Header
