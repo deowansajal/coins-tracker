@@ -52,26 +52,41 @@ const Login = props => {
     }
 
     return (
-        <FormWrapper>
-            <h2 className="text-4xl mb-8 text-center font-medium">Login</h2>
-            <form onSubmit={handleFormSubmit}>
-                <InputField
-                    placeholder="Your email"
-                    name="email"
-                    type="email"
-                    value={formState.email}
-                    onChange={handleChange}
-                />
-                <InputField
-                    placeholder="******"
-                    name="password"
-                    type="password"
-                    value={formState.password}
-                    onChange={handleChange}
-                />
-                <Button type="submit">Submit</Button>
-            </form>
-        </FormWrapper>
+        <div className="mx-4">
+            <FormWrapper>
+                <div className="text-center text-red-400">
+                    {error && error.message}
+                </div>
+                <h2 className="text-4xl mb-8 text-center font-medium">Login</h2>
+                <form onSubmit={handleFormSubmit}>
+                    <InputField
+                        placeholder="Your email"
+                        name="email"
+                        type="email"
+                        value={formState.email}
+                        onChange={handleChange}
+                    />
+                    <InputField
+                        placeholder="******"
+                        name="password"
+                        type="password"
+                        value={formState.password}
+                        onChange={handleChange}
+                    />
+                    <Button type="submit">Submit</Button>
+                </form>
+
+                <div className="text-sm mt-5 mx-3 text-right ">
+                    <span>Don't have an Account Yet ?</span>
+                    <Link
+                        className="font-medium text-cyan-500 ml-2"
+                        to="/signup"
+                    >
+                        (Signup)
+                    </Link>
+                </div>
+            </FormWrapper>
+        </div>
     )
 }
 

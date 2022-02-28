@@ -1,13 +1,30 @@
-import React from 'react';
+import React from 'react'
+import CoinCard from '../components/CoinCard'
+import Container from '../components/Container'
+
+import { coins } from '../data'
 
 const Home = () => {
+    return (
+        <main>
+            <Container className="mt-20 ">
+                <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3  lg:grid-cols-4 gap-y-8  ">
+                    {coins.slice(0, 6).map(coin => (
+                        <CoinCard
+                            key={coin.id}
+                            id={coin.id}
+                            name={coin.name}
+                            symbol={coin.symbol}
+                            price={coin.priceUsd}
+                            rank={coin.rank}
+                            volume={coin.volumeUsd24Hr}
+                            supply={coin.supply}
+                        />
+                    ))}
+                </div>
+            </Container>
+        </main>
+    )
+}
 
-  return (
-    <main>
-      <div className="flex-row justify-center">
-      </div>
-    </main>
-  );
-};
-
-export default Home;
+export default Home

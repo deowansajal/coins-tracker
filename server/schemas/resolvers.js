@@ -4,27 +4,23 @@ const { signToken } = require('../utils/auth')
 
 const resolvers = {
     Query: {
-        // users: async () => {
-        //     return User.find().populate('thoughts')
-        // },
-        // user: async (parent, { username }) => {
-        //     return User.findOne({ username }).populate('thoughts')
-        // },
-
         users: async () => {
-            return [{ _id: 1, username: 'sajal', email: 'test@test.com' }]
+            return User.find().populate('thoughts')
         },
         user: async (parent, { username }) => {
-            return { _id: 1, username, email: 'test@test.com' }
+            return User.findOne({ username }).populate('thoughts')
         },
-        // test: () => ({ message: 'Hello' }),
     },
 
     Mutation: {
         addUser: async (parent, { username, email, password }) => {
-            const user = await User.create({ username, email, password })
-            const token = signToken(user)
-            return { token, user }
+            try {
+                const user = await User.create({ username, email, password })
+                const token = signToken(user)
+                return { token, user }
+            } catch (error) {
+                throw new Error('User Creation fail!')
+            }
         },
         login: async (parent, { email, password }) => {
             const user = await User.findOne({ email })
