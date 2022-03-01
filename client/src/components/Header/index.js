@@ -1,7 +1,9 @@
 import React from 'react'
 import { Link } from 'react-router-dom'
+import { useUtils } from '../../hooks/useUtils'
 
 import Auth from '../../utils/auth'
+import Button from '../Button'
 import Container from '../Container'
 
 const Logo = () => {
@@ -14,25 +16,33 @@ const Logo = () => {
     )
 }
 
-const NavListItems = ({ logout }) => {
+const NavListItems = ({ logout, openAuthModal }) => {
     if (Auth.loggedIn()) {
         return (
-            <button
-                className="font-medium mr-4 px-4 py-1 rounded-full bg-gradient-to-r from-pink-500 to-yellow-600"
-                onClick={logout}
-            >
-                Logout
-            </button>
+            <>
+                {/* <span>{Auth.getProfile()?.data?.username}</span> */}
+                <button
+                    className="font-medium mr-4 px-4 py-1 "
+                    onClick={logout}
+                >
+                    Logout
+                </button>
+            </>
         )
     }
     return (
-        <Link className="font-medium mr-4" to="/login">
+        <button
+            className="font-medium mr-4 px-4 py-1 rounded-full bg-gradient-to-r from-pink-500 to-yellow-600"
+            onClick={openAuthModal}
+        >
             Login
-        </Link>
+        </button>
     )
 }
 
 const Header = () => {
+    const { openAuthModal } = useUtils()
+
     const logout = event => {
         event.preventDefault()
         Auth.logout()
@@ -42,7 +52,10 @@ const Header = () => {
             <Container className="flex justify-between">
                 <Logo />
                 <nav>
-                    <NavListItems logout={logout} />
+                    <NavListItems
+                        logout={logout}
+                        openAuthModal={openAuthModal}
+                    />
                 </nav>
             </Container>
         </header>

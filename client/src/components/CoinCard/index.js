@@ -15,7 +15,7 @@ const CoinCardBody = ({ children }) => {
 
 const CoinCardListItem = ({ title, value }) => {
     return (
-        <li className="flex justify-between">
+        <li className="flex justify-between font-medium text-sm">
             <div>{title}:</div>
             <div>{value}</div>
         </li>
@@ -37,16 +37,19 @@ const CoinCard = ({
     return (
         <div className="bg-gradient-to-r from-cyan-500 to-blue-500 shadow-md shadow-cyan-500/40 text-white px-4 py-2 mx-4 rounded-md">
             <CoinCardHeader>
-                <h4>
-                    {name} <small>({symbol})</small>
+                <h4 className="font-bold pb-3">
+                    {name} <small className="text-xs">({symbol})</small>
                 </h4>
             </CoinCardHeader>
 
             <CoinCardBody>
                 <ul>
                     <CoinCardListItem title="Price" value={formatCash(price)} />
-                    <CoinCardListItem title="Market Cap" value={marketCapUsd} />
-                    <CoinCardListItem title="Rank" value={rank} />
+                    <CoinCardListItem
+                        title="Market Cap"
+                        value={formatCash(marketCapUsd)}
+                    />
+                    <CoinCardListItem title="Rank" value={'#' + rank} />
                     <CoinCardListItem
                         title="Volume"
                         value={formatCash(volume)}
