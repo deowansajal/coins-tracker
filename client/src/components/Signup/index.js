@@ -6,18 +6,11 @@ import { ADD_USER } from '../../utils/mutations'
 
 import Auth from '../../utils/auth'
 
-import InputField from '../Inputs'
+import InputField from '../InputField'
 
 import Button from '../Button'
 import { useUtils } from '../../hooks/useUtils'
-
-const FormWrapper = ({ children }) => {
-    return (
-        <div className="max-w-md p-10 mt-20  mx-auto border rounded-xl shadow-lg bg-white">
-            {children}
-        </div>
-    )
-}
+import FormWrapper from '../FormWrapper'
 
 const Signup = () => {
     const [formState, setFormState] = useState({

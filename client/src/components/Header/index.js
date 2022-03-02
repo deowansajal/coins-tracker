@@ -32,7 +32,7 @@ const NavListItems = ({ logout, openAuthModal }) => {
     }
     return (
         <button
-            className="font-medium mr-4 px-4 py-1 rounded-full bg-gradient-to-r from-pink-500 to-yellow-600"
+            className="font-medium mr-4 px-4 py-1 rounded-full bg-gradient-to-r from-pink-500 to-orange-400 "
             onClick={openAuthModal}
         >
             Login

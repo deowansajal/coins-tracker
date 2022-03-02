@@ -12,6 +12,7 @@ import Home from './pages/Home'
 import Header from './components/Header'
 import Footer from './components/Footer'
 import UtilsProvider from './context/Utils'
+import Me from './pages/Me'
 
 // Construct our main GraphQL API endpoint
 const httpLink = createHttpLink({
@@ -46,6 +47,10 @@ function App() {
                     <Switch>
                         <Route exact path="/">
                             <Home />
+                        </Route>
+
+                        <Route exact path="/me">
+                            <Me />
                         </Route>
 
                         <Route path="*">

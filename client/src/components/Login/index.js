@@ -2,19 +2,13 @@ import React, { useState } from 'react'
 import { useMutation } from '@apollo/client'
 import { LOGIN_USER } from '../../utils/mutations'
 
-import InputField from '../Inputs'
+import InputField from '../InputField'
 
 import Auth from '../../utils/auth'
 
 import Button from '../Button'
 import { useUtils } from '../../hooks/useUtils'
-const FormWrapper = ({ children }) => {
-    return (
-        <div className="max-w-md p-10 mt-20 mx-auto border rounded-xl shadow-lg bg-white">
-            {children}
-        </div>
-    )
-}
+import FormWrapper from '../FormWrapper'
 
 const Login = props => {
     const [formState, setFormState] = useState({ email: '', password: '' })
