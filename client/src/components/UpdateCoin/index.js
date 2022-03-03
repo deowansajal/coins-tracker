@@ -1,17 +1,19 @@
 import { useMutation } from '@apollo/client'
 import React, { useState } from 'react'
 import { useUtils } from '../../hooks/useUtils'
-import { ADD_COIN } from '../../utils/mutations'
+import { ADD_USER } from '../../utils/mutations'
 import Button from '../Button'
 import FormWrapper from '../FormWrapper'
 import InputField from '../InputField'
 
+import Coin from '../../utils/coin'
+
 const AddCoin = () => {
-    const [enteredNewCoin, setEnteredNewCoin] = useState('')
+    const [enteredNewCoin, setEnteredNewCoin] = useState(Coin.getCurrentCoin())
 
     const { setIsLoginMode } = useUtils()
 
-    const [addUser, { data }] = useMutation(ADD_COIN)
+    const [addUser, { data }] = useMutation(ADD_USER)
     const [errorMessage, setErrorMessage] = useState('')
 
     const handleChange = event => {
@@ -38,17 +40,17 @@ const AddCoin = () => {
             <FormWrapper>
                 {/* <div className="text-red-400">{errorMessage}</div> */}
                 <h2 className="text-4xl mb-8 text-center font-medium">
-                    Add New Coin
+                    Update Coin
                 </h2>
                 <form onSubmit={handleFormSubmit}>
                     <InputField
-                        placeholder="Add new coin"
-                        name="addNewCoin"
+                        placeholder="Update coin"
+                        name="updateCoin"
                         value={enteredNewCoin}
                         onChange={handleChange}
                     />
 
-                    <Button type="submit">Add Coin</Button>
+                    <Button type="submit">Update Coin</Button>
                 </form>
             </FormWrapper>
         </div>

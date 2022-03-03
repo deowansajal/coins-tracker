@@ -1,11 +1,22 @@
-const jwt = require('jsonwebtoken');
+const { ForbiddenError } = require('apollo-server-express')
+const jwt = require('jsonwebtoken')
 
-const secret = process.env.JWT_SECRET;
-const expiration = '2h';
+const secret = process.env.JWT_SECRET
+const expiration = '10h'
 
 module.exports = {
-  signToken: function ({ email, username, _id }) {
-    const payload = { email, username, _id };
-    return jwt.sign({ data: payload }, secret, { expiresIn: expiration });
-  },
-};
+    signToken: function ({ email, username, _id }) {
+        const payload = { email, username, _id }
+        return jwt.sign({ data: payload }, secret, { expiresIn: expiration })
+    },
+    authMiddleware: ({ req }) => {
+        const token = req.headers?.authorization?.split(' ')[1]
+
+        try {
+            const decoded = jwt.decode(token, secret)
+            return { user: decoded.data }
+        } catch (error) {
+            throw new ForbiddenError('Unauthorized!')
+        }
+    },
+}

@@ -23,3 +23,11 @@ export const ADD_USER = gql`
         }
     }
 `
+
+export const ADD_COIN = gql`
+    mutation add($coin: String!) {
+        add(coin: $coin) {
+            coins
+        }
+    }
+`

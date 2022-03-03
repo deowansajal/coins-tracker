@@ -1,17 +1,30 @@
 import { createContext, useState } from 'react'
+import Coin from '../../utils/coin'
 
 export const UtilsContext = createContext()
 
 const UtilsProvider = ({ children }) => {
     const [isAuthModalOpen, setIsAuthModalOpen] = useState(false)
     const [isLoginMode, setIsLoginMode] = useState(true)
-    const [isAddCoinModalOpen, setIsAddCoinModalOpen] = useState(false)
+
+    const [isCoinModalOpen, setIsCoinModalOpen] = useState(false)
+    const [isAddCoinMode, setIsAddCoinMode] = useState(true)
 
     const openAuthModal = () => setIsAuthModalOpen(true)
     const closeAuthModal = () => setIsAuthModalOpen(false)
 
-    const openAddCoinModal = () => setIsAddCoinModalOpen(true)
-    const closeAddCoinModal = () => setIsAddCoinModalOpen(false)
+    const openCoinModal = () => setIsCoinModalOpen(true)
+    const closeCoinModal = () => setIsCoinModalOpen(false)
+
+    const addCoinMode = () => {
+        setIsAddCoinMode(true)
+        openCoinModal()
+    }
+    const updateCoinMode = coin => {
+        setIsAddCoinMode(false)
+        openCoinModal()
+        Coin.setCurrentCoin(coin)
+    }
 
     const value = {
         isAuthModalOpen,
@@ -20,9 +33,13 @@ const UtilsProvider = ({ children }) => {
         isLoginMode,
         setIsLoginMode,
         setIsAuthModalOpen,
-        isAddCoinModalOpen,
-        openAddCoinModal,
-        closeAddCoinModal,
+        isCoinModalOpen,
+        openCoinModal,
+        closeCoinModal,
+        isAddCoinMode,
+        setIsAddCoinMode,
+        addCoinMode,
+        updateCoinMode,
     }
 
     return (

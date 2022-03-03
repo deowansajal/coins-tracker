@@ -10,19 +10,21 @@ import Signup from '../components/Signup'
 
 import Auth from '../utils/auth'
 import { PlusIcon } from '../components/Icon'
-import InputField from '../components/InputField'
-import FormWrapper from '../components/FormWrapper'
-import Button from '../components/Button'
+
 import AddCoin from '../components/AddCoin'
+import UpdateCoin from '../components/UpdateCoin'
+import { AddCoinButton } from '../components/Button'
 
 const Home = () => {
     const {
         isAuthModalOpen,
         closeAuthModal,
         isLoginMode,
-        openAddCoinModal,
-        closeAddCoinModal,
-        isAddCoinModalOpen,
+        closeCoinModal,
+        isCoinModalOpen,
+        isAddCoinMode,
+        addCoinMode,
+        updateCoinMode,
     } = useUtils()
 
     const isAuthenticated = Auth.loggedIn()
@@ -35,18 +37,15 @@ const Home = () => {
                 {isAuthenticated && (
                     <>
                         <div className="mb-12 md:mb-20">
-                            <button
-                                onClick={() => openAddCoinModal()}
-                                className="w-10 h-10 text-white flex justify-center items-center m-auto font-medium  rounded-full bg-gradient-to-r from-pink-500 to-orange-400 shadow shadow-pink-500/40"
-                            >
+                            <AddCoinButton onClick={() => addCoinMode()}>
                                 <PlusIcon />
-                            </button>
+                            </AddCoinButton>
                         </div>
                         <Modal
-                            modalIsOpen={isAddCoinModalOpen}
-                            closeModal={closeAddCoinModal}
+                            modalIsOpen={isCoinModalOpen}
+                            closeModal={closeCoinModal}
                         >
-                            <AddCoin />
+                            {isAddCoinMode ? <AddCoin /> : <UpdateCoin />}
                         </Modal>
                     </>
                 )}
@@ -70,6 +69,8 @@ const Home = () => {
                             supply={coin.supply}
                             marketCapUsd={coin.marketCapUsd}
                             isIconShown={isAuthenticated}
+                            addCoinMode={addCoinMode}
+                            updateCoinMode={updateCoinMode}
                         />
                     ))}
                 </div>

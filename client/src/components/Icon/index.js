@@ -44,7 +44,7 @@ export const EditIcon = ({ className, ...props }) => {
 
 export const PlusIcon = ({ className, ...props }) => {
     const classes = classNames({
-        'fill-slate-200 cursor-pointer hover:opacity-75 ': true,
+        'fill-slate-200 cursor-pointer hover:opacity-75': true,
         [className]: className,
     })
     return (

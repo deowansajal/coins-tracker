@@ -37,6 +37,8 @@ const CoinCard = ({
     supply,
     marketCapUsd,
     isIconShown,
+    openCoinModal,
+    updateCoinMode,
 }) => {
     return (
         <div className="bg-gradient-to-r from-cyan-500 to-blue-500 shadow-md shadow-cyan-500/40 text-white px-4 py-2 mx-4 rounded-md">
@@ -48,9 +50,13 @@ const CoinCard = ({
                     <div className="flex justify-between">
                         <EditIcon
                             className="mr-1"
-                            onClick={() => console.log('clicked')}
+                            onClick={() => updateCoinMode(name)}
                         />
-                        <DeleteIcon />
+                        <DeleteIcon
+                            onClick={e => {
+                                console.log(id, name, symbol)
+                            }}
+                        />
                     </div>
                 )}
             </CoinCardHeader>

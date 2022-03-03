@@ -11,7 +11,7 @@ const InputField = ({
     type = 'text',
 }) => {
     const classes = classNames({
-        'border py-2 px-4 w-full mb-6 rounded-full': true,
+        'border py-2 px-4 w-full mb-6 rounded-full focus:outline-none focus:border-cyan-700': true,
         [className]: className,
     })
     return (
