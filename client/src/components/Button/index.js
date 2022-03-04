@@ -19,7 +19,7 @@ const Button = ({ className, children, ...props }) => {
 export const AddCoinButton = ({ className, children, onClick }) => {
     const classes = classNames({
         [btnClasses]: btnClasses,
-        'w-10 h-10  flex justify-center items-center m-auto font-medium  rounded-full bg-gradient-to-r from-pink-500 to-orange-400 shadow shadow-pink-500/40': true,
+        'w-10 h-10  flex justify-center items-center m-auto font-medium  rounded-full bg-gradient-to-r from-pink-500 to-orange-400 shadow shadow-pink-500/40 focus:outline-none': true,
         [className]: className,
     })
     return (

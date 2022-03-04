@@ -14,6 +14,8 @@ import { PlusIcon } from '../components/Icon'
 import AddCoin from '../components/AddCoin'
 import UpdateCoin from '../components/UpdateCoin'
 import { AddCoinButton } from '../components/Button'
+import { useMutation } from '@apollo/client'
+import { REMOVE_COIN } from '../utils/mutations'
 
 const Home = () => {
     const {
@@ -27,9 +29,22 @@ const Home = () => {
         updateCoinMode,
     } = useUtils()
 
+    const [removeCoin, { data }] = useMutation(REMOVE_COIN)
+
     const isAuthenticated = Auth.loggedIn()
 
-    console.log(isLoginMode)
+    const onCoinDeleteHandler = async coin => {
+        console.log({ deleteCoin: coin })
+        try {
+            const { data } = await removeCoin({
+                variables: { coin },
+            })
+            closeCoinModal()
+        } catch (e) {
+            // setErrorMessage(e.message)
+            console.error(e)
+        }
+    }
 
     return (
         <main>
@@ -71,6 +86,7 @@ const Home = () => {
                             isIconShown={isAuthenticated}
                             addCoinMode={addCoinMode}
                             updateCoinMode={updateCoinMode}
+                            onCoinDeleteHandler={onCoinDeleteHandler}
                         />
                     ))}
                 </div>

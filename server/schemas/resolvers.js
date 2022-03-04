@@ -7,13 +7,16 @@ const { User } = require('../models')
 const { signToken } = require('../utils/auth')
 const { COIN_LIST } = require('../utils/coinList')
 
+const isValidCoin = coin => COIN_LIST.some(existCoin => existCoin[0] === coin)
+
 const resolvers = {
     Query: {
         users: async () => {
             return User.find().populate('thoughts')
         },
-        user: async (parent, { username }) => {
-            return User.findOne({ username }).populate('thoughts')
+        user: async (parent, data, { user, isAuthenticated }) => {
+            if (!isAuthenticated) throw new ForbiddenError('Unauthorized!')
+            return User.findById(user._id)
         },
     },
 
@@ -47,19 +50,12 @@ const resolvers = {
             return { token, user }
         },
 
-        addCoin: async (parent, { coin }, context) => {
-            const user = await User.findById(context.user?._id)
+        addCoin: async (parent, { coin }, { user, isAuthenticated }) => {
+            if (!isAuthenticated) throw new ForbiddenError('Unauthorized!')
 
-            if (!user) {
-                throw new ForbiddenError('Unauthorized!')
-            }
-
-            if (
-                user.coins?.includes(coin) ||
-                !COIN_LIST.some(existCoin => existCoin[0] === coin)
-            ) {
+            if (user.coins?.includes(coin) || !isValidCoin(coin)) {
                 throw new UserInputError(
-                    `${coin} already has taken! or invalid coin `
+                    `${coin} already has taken! or invalid coin`
                 )
             }
 
@@ -67,36 +63,47 @@ const resolvers = {
 
             const result = await user.save({ validate: false })
 
-            return { coins: [{ coin }], result }
+            return { coin }
         },
 
-        updateCoin: async (parent, { coin, newCoin }, context) => {
-            const user = await User.findOne({
-                _id: context.user?._id,
-                coins: coin,
-            })
+        updateCoin: async (
+            parent,
+            { coin, newCoin },
+            { user, isAuthenticated }
+        ) => {
+            if (!isAuthenticated) throw new ForbiddenError('Unauthorized!')
 
-            if (!user) throw new ForbiddenError('Unauthorized!')
+            if (
+                !user.coins?.includes(coin) ||
+                user.coins?.includes(newCoin) ||
+                !isValidCoin(newCoin)
+            ) {
+                throw new UserInputError(
+                    "coin doesn't  or newCoin already  exist"
+                )
+            }
 
-            if (!COIN_LIST.some(existCoin => existCoin[0] === newCoin))
-                throw new UserInputError('or invalid coin')
+            const index = user.coins?.findIndex(_coin => _coin === coin)
 
-            const index = user.coins.findIndex(existCoin => existCoin === coin)
+            if (index === -1 || typeof index === undefined) {
+                throw new UserInputError("coin doesn't exist")
+            }
+
             user.coins.set(index, newCoin)
             await user.save({ validate: false })
 
             return { coin: newCoin }
         },
 
-        removeCoin: async (parent, { coin }, context) => {
-            const user = await User.findOne({
-                _id: context.user?._id,
-                coins: coin,
-            })
+        removeCoin: async (parent, { coin }, { user, isAuthenticated }) => {
+            if (!isAuthenticated) throw new ForbiddenError('Unauthorized!')
 
-            if (!user) throw new ForbiddenError('Unauthorized!')
+            const index = user.coins?.findIndex(_coin => _coin === coin)
 
-            const index = user.coins.findIndex(existCoin => existCoin === coin)
+            if (index === -1 || typeof index === undefined) {
+                throw new UserInputError("coin doesn't exist")
+            }
+
             user.coins.splice(index, 1)
             await user.save({ validate: false })
 

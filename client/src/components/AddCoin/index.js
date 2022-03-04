@@ -9,34 +9,31 @@ import InputField from '../InputField'
 const AddCoin = () => {
     const [enteredNewCoin, setEnteredNewCoin] = useState('')
 
-    const { setIsLoginMode } = useUtils()
+    const { closeCoinModal } = useUtils()
 
-    const [addUser, { data }] = useMutation(ADD_COIN)
+    const [addCoin, { data }] = useMutation(ADD_COIN)
+
     const [errorMessage, setErrorMessage] = useState('')
 
-    const handleChange = event => {
-        const { value } = event.target
-
-        setEnteredNewCoin(value)
-    }
+    const handleChange = event => setEnteredNewCoin(event.target.value)
 
     const handleFormSubmit = async event => {
         event.preventDefault()
-        // console.log(formState)
-        // try {
-        //     const { data } = await addUser({
-        //         variables: { ...formState },
-        //     })
-        //     Auth.login(data.addUser.token)
-        // } catch (e) {
-        //     setErrorMessage(e.message)
-        //     console.error(e)
-        // }
+        try {
+            const { data } = await addCoin({
+                variables: { coin: enteredNewCoin },
+            })
+            closeCoinModal()
+        } catch (e) {
+            setErrorMessage(e.message)
+            console.error(e)
+        }
     }
+
     return (
         <div className="mx-4">
             <FormWrapper>
-                {/* <div className="text-red-400">{errorMessage}</div> */}
+                <div className="text-red-400">{errorMessage}</div>
                 <h2 className="text-4xl mb-8 text-center font-medium">
                     Add New Coin
                 </h2>
