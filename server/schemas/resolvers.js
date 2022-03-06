@@ -7,7 +7,16 @@ const { User } = require('../models')
 const { signToken } = require('../utils/auth')
 const { COIN_LIST } = require('../utils/coinList')
 
-const isValidCoin = coin => COIN_LIST.some(existCoin => existCoin[0] === coin)
+const isValidCoin = coin =>
+    COIN_LIST.map(coin => coin.toLowerCase()).includes(coin?.toLowerCase())
+
+const isCoinIncludes = (coin, coins) => {
+    const lowercaseCoin = coin?.trim()?.toLowerCase()
+    console.log({ lowercaseCoin })
+    const isIncludes = coins?.includes(lowercaseCoin)
+    console.log({ isIncludes })
+    return isIncludes
+}
 
 const resolvers = {
     Query: {
@@ -16,7 +25,9 @@ const resolvers = {
         },
         user: async (parent, data, { user, isAuthenticated }) => {
             if (!isAuthenticated) throw new ForbiddenError('Unauthorized!')
-            return User.findById(user._id)
+            await User.findById(user._id)
+            console.log('user', user)
+            return user
         },
     },
 
@@ -53,17 +64,21 @@ const resolvers = {
         addCoin: async (parent, { coin }, { user, isAuthenticated }) => {
             if (!isAuthenticated) throw new ForbiddenError('Unauthorized!')
 
-            if (user.coins?.includes(coin) || !isValidCoin(coin)) {
-                throw new UserInputError(
-                    `${coin} already has taken! or invalid coin`
-                )
+            const lowercaseCoin = coin?.toLowerCase()
+
+            if (user.coins?.includes(lowercaseCoin)) {
+                throw new UserInputError(`${lowercaseCoin} already has taken!`)
             }
 
-            user.coins.push(coin)
+            if (!isValidCoin(lowercaseCoin)) {
+                throw new UserInputError(`${lowercaseCoin} is not valid coin!`)
+            }
+
+            user.coins.push(lowercaseCoin)
 
             const result = await user.save({ validate: false })
 
-            return { coin }
+            return { coin: lowercaseCoin }
         },
 
         updateCoin: async (
@@ -73,17 +88,20 @@ const resolvers = {
         ) => {
             if (!isAuthenticated) throw new ForbiddenError('Unauthorized!')
 
-            if (
-                !user.coins?.includes(coin) ||
-                user.coins?.includes(newCoin) ||
-                !isValidCoin(newCoin)
-            ) {
-                throw new UserInputError(
-                    "coin doesn't  or newCoin already  exist"
-                )
+            if (!isCoinIncludes(coin, user.coins)) {
+                throw new UserInputError(`${coin} doesn't exist`)
+            }
+            if (isCoinIncludes(newCoin, user.coins)) {
+                throw new UserInputError(`${coin} already has taken!`)
             }
 
-            const index = user.coins?.findIndex(_coin => _coin === coin)
+            if (!isValidCoin(newCoin)) {
+                throw new UserInputError(`${coin} is not valid coin!`)
+            }
+
+            const index = user.coins?.findIndex(
+                _coin => _coin === coin?.toLowerCase()
+            )
 
             if (index === -1 || typeof index === undefined) {
                 throw new UserInputError("coin doesn't exist")
@@ -98,7 +116,9 @@ const resolvers = {
         removeCoin: async (parent, { coin }, { user, isAuthenticated }) => {
             if (!isAuthenticated) throw new ForbiddenError('Unauthorized!')
 
-            const index = user.coins?.findIndex(_coin => _coin === coin)
+            const index = user.coins?.findIndex(
+                _coin => _coin === coin?.toLowerCase()
+            )
 
             if (index === -1 || typeof index === undefined) {
                 throw new UserInputError("coin doesn't exist")

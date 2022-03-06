@@ -11,8 +11,11 @@ import { BrowserRouter as Router, Route, Switch } from 'react-router-dom'
 import Home from './pages/Home'
 import Header from './components/Header'
 import Footer from './components/Footer'
-import UtilsProvider from './context/Utils'
+import UtilsProvider from './context/utils'
+import CoinsProvider from './context/coins'
 import Me from './pages/Me'
+import PublicRoute from './utils/PublicRoutes'
+import PrivateRoute from './utils/PrivateRoutes'
 
 // Construct our main GraphQL API endpoint
 const httpLink = createHttpLink({
@@ -42,24 +45,27 @@ function App() {
     return (
         <ApolloProvider client={client}>
             <UtilsProvider>
-                <Router>
-                    <Header />
-                    <Switch>
-                        <Route exact path="/">
-                            <Home />
-                        </Route>
+                <CoinsProvider>
+                    <Router>
+                        <Header />
+                        <Switch>
+                            <PublicRoute
+                                exact
+                                path="/"
+                                restricted={true}
+                                component={Home}
+                            />
 
-                        <Route exact path="/me">
-                            <Me />
-                        </Route>
+                            <PrivateRoute exact path="/me" component={Me} />
 
-                        <Route path="*">
-                            <h1>Page Not Found</h1>
-                        </Route>
+                            <Route path="*">
+                                <h1>Page Not Found</h1>
+                            </Route>
 
-                        {/* <Footer /> */}
-                    </Switch>
-                </Router>
+                            {/* <Footer /> */}
+                        </Switch>
+                    </Router>
+                </CoinsProvider>
             </UtilsProvider>
         </ApolloProvider>
     )

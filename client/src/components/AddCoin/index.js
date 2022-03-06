@@ -1,33 +1,19 @@
-import { useMutation } from '@apollo/client'
 import React, { useState } from 'react'
-import { useUtils } from '../../hooks/useUtils'
-import { ADD_COIN } from '../../utils/mutations'
-import Button from '../Button'
+
 import FormWrapper from '../FormWrapper'
 import InputField from '../InputField'
+import Button from '../Button'
+import { useCoins } from '../../hooks/useCoins'
 
 const AddCoin = () => {
     const [enteredNewCoin, setEnteredNewCoin] = useState('')
-
-    const { closeCoinModal } = useUtils()
-
-    const [addCoin, { data }] = useMutation(ADD_COIN)
-
-    const [errorMessage, setErrorMessage] = useState('')
+    const { addCoinSubmitHandler, errorMessage } = useCoins()
 
     const handleChange = event => setEnteredNewCoin(event.target.value)
 
-    const handleFormSubmit = async event => {
+    const handleFormSubmit = event => {
         event.preventDefault()
-        try {
-            const { data } = await addCoin({
-                variables: { coin: enteredNewCoin },
-            })
-            closeCoinModal()
-        } catch (e) {
-            setErrorMessage(e.message)
-            console.error(e)
-        }
+        addCoinSubmitHandler(enteredNewCoin)
     }
 
     return (
