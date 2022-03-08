@@ -11,11 +11,12 @@ module.exports = {
         return jwt.sign({ data: payload }, secret, { expiresIn: expiration })
     },
     authMiddleware: async function ({ req }) {
-        const token = req.headers?.authorization?.split(' ')[1]
-
+        const token = req.headers.authorization?.split(' ')[1]
         const result = { user: null, isAuthenticated: false }
+        if (!token) return result
+
         try {
-            const decoded = jwt.decode(token, secret)
+            const decoded = jwt.verify(token, secret)
             const user = await User.findById(decoded.data?._id)
             if (!user) return result
             return { user, isAuthenticated: true }

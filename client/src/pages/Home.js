@@ -42,6 +42,7 @@ const Home = () => {
                             volume={coin.volumeUsd24Hr}
                             supply={coin.supply}
                             marketCapUsd={coin.marketCapUsd}
+                            changePercent24Hr={coin.changePercent24Hr}
                             isIconShown={isAuthenticated}
                         />
                     ))}

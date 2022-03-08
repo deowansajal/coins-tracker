@@ -34,10 +34,13 @@ const CoinCard = ({
     volume,
     supply,
     marketCapUsd,
+    changePercent24Hr,
     isIconShown,
     updateCoinMode,
     removeCoinHandler,
 }) => {
+    const changePercent24HrNumber = parseFloat(changePercent24Hr)
+
     return (
         <div className="bg-gradient-to-r from-cyan-500 to-blue-500 shadow-md shadow-cyan-500/40 text-white px-4 py-2 mx-4 rounded-md">
             <CoinCardHeader>
@@ -57,7 +60,24 @@ const CoinCard = ({
 
             <CoinCardBody>
                 <ul>
-                    <CoinCardListItem title="Price" value={formatCash(price)} />
+                    <CoinCardListItem
+                        title="Price"
+                        value={
+                            <div>
+                                {formatCash(price)}
+                                <span
+                                    className={classNames({
+                                        'text-orange-600':
+                                            changePercent24HrNumber < 0,
+                                        'text-lime-500':
+                                            changePercent24HrNumber > 0,
+                                    })}
+                                >
+                                    ({changePercent24HrNumber.toFixed(2)}%)
+                                </span>
+                            </div>
+                        }
+                    />
                     <CoinCardListItem
                         title="Market Cap"
                         value={formatCash(marketCapUsd)}

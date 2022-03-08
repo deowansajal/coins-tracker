@@ -10,6 +10,7 @@ import AddCoin from '../components/AddCoin'
 import UpdateCoin from '../components/UpdateCoin'
 import Auth from '../utils/auth'
 import CoinsContainer from '../components/CoinsContainer'
+import Loading from '../components/Loading'
 
 const Me = () => {
     const {
@@ -20,9 +21,14 @@ const Me = () => {
         updateCoinMode,
         removeCoinHandler,
         userCoins,
+        isLoading,
     } = useCoins()
 
     const isAuthenticated = Auth.loggedIn()
+
+    if (isLoading) {
+        return <Loading />
+    }
 
     return (
         <main>
@@ -40,8 +46,14 @@ const Me = () => {
                     {isAddCoinMode ? <AddCoin /> : <UpdateCoin />}
                 </Modal>
 
+                {userCoins.length === 0 && (
+                    <h1 className="text-xl text-slate-500 text-center">
+                        You haven't added any coin
+                    </h1>
+                )}
+
                 <CoinsContainer>
-                    {userCoins?.map(coin => (
+                    {userCoins.map(coin => (
                         <CoinCard
                             key={coin.id}
                             id={coin.id}
@@ -52,6 +64,7 @@ const Me = () => {
                             volume={coin.volumeUsd24Hr}
                             supply={coin.supply}
                             marketCapUsd={coin.marketCapUsd}
+                            changePercent24Hr={coin.changePercent24Hr}
                             isIconShown={isAuthenticated}
                             addCoinMode={addCoinMode}
                             updateCoinMode={updateCoinMode}

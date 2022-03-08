@@ -10,9 +10,9 @@ const isValidCoin = require('../utils/isValidCoin')
 
 const resolvers = {
     Query: {
-        users: async () => {
-            return User.find().populate('thoughts')
-        },
+        // users: async () => {
+        //     return User.find().populate('thoughts')
+        // },
         user: async (parent, data, { user, isAuthenticated }) => {
             if (!isAuthenticated) throw new ForbiddenError('Unauthorized!')
             return user

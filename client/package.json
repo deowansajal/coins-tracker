@@ -12,7 +12,6 @@
     "graphql": "^15.4.0",
     "jwt-decode": "^3.1.2",
     "react": "^17.0.1",
-    "react-autosuggest": "^10.1.0",
     "react-dom": "^17.0.1",
     "react-modal": "^3.14.4",
     "react-router-dom": "^5.2.0",
