@@ -9,11 +9,17 @@ import Login from '../components/Login'
 import Signup from '../components/Signup'
 
 import Auth from '../utils/auth'
+import CoinsContainer from '../components/CoinsContainer'
+import Loading from '../components/Loading'
 
 const Home = () => {
     const { isAuthModalOpen, closeAuthModal, isLoginMode } = useUtils()
     const isAuthenticated = Auth.loggedIn()
-    const { coins } = useCoins()
+    const { slicedCoins, isLoading } = useCoins()
+
+    if (isLoading || slicedCoins.length === 0) {
+        return <Loading />
+    }
 
     return (
         <main>
@@ -24,8 +30,8 @@ const Home = () => {
                 >
                     {isLoginMode ? <Login /> : <Signup />}
                 </Modal>
-                <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3  lg:grid-cols-4 gap-y-8">
-                    {coins?.map(coin => (
+                <CoinsContainer>
+                    {slicedCoins.map(coin => (
                         <CoinCard
                             key={coin.id}
                             id={coin.id}
@@ -39,7 +45,7 @@ const Home = () => {
                             isIconShown={isAuthenticated}
                         />
                     ))}
-                </div>
+                </CoinsContainer>
             </Container>
         </main>
     )

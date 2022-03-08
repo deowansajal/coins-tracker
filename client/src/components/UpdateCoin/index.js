@@ -6,11 +6,13 @@ import InputField from '../InputField'
 
 import Coin from '../../utils/coin'
 import { useCoins } from '../../hooks/useCoins'
+import ToastMessage from '../ToastMessage'
 
 const UpdateCoin = () => {
     const [enteredNewCoin, setEnteredNewCoin] = useState(Coin.getCurrentCoin())
 
-    const { errorMessage, updateCoinSubmitHandler } = useCoins()
+    const { updateCoinSubmitHandler, errorMessage, setErrorMessage } =
+        useCoins()
 
     const handleChange = event => setEnteredNewCoin(event.target.value)
 
@@ -21,7 +23,11 @@ const UpdateCoin = () => {
     return (
         <div className="mx-4">
             <FormWrapper>
-                <div className="text-red-400">{errorMessage}</div>
+                <ToastMessage
+                    type="error"
+                    message={errorMessage}
+                    setMessage={setErrorMessage}
+                />
                 <h2 className="text-4xl mb-8 text-center font-medium">
                     Update Coin
                 </h2>

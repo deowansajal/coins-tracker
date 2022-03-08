@@ -5,10 +5,6 @@ const typeDefs = gql`
         coin: String!
     }
 
-    type Coins {
-        coins: [Coin]
-    }
-
     type User {
         _id: ID
         username: String

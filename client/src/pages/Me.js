@@ -9,6 +9,7 @@ import { useCoins } from '../hooks/useCoins'
 import AddCoin from '../components/AddCoin'
 import UpdateCoin from '../components/UpdateCoin'
 import Auth from '../utils/auth'
+import CoinsContainer from '../components/CoinsContainer'
 
 const Me = () => {
     const {
@@ -18,7 +19,7 @@ const Me = () => {
         addCoinMode,
         updateCoinMode,
         removeCoinHandler,
-        coins,
+        userCoins,
     } = useCoins()
 
     const isAuthenticated = Auth.loggedIn()
@@ -39,8 +40,8 @@ const Me = () => {
                     {isAddCoinMode ? <AddCoin /> : <UpdateCoin />}
                 </Modal>
 
-                <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3  lg:grid-cols-4 gap-y-8">
-                    {coins?.map(coin => (
+                <CoinsContainer>
+                    {userCoins?.map(coin => (
                         <CoinCard
                             key={coin.id}
                             id={coin.id}
@@ -57,7 +58,7 @@ const Me = () => {
                             removeCoinHandler={removeCoinHandler}
                         />
                     ))}
-                </div>
+                </CoinsContainer>
             </Container>
         </main>
     )

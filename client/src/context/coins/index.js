@@ -15,11 +15,12 @@ export const CoinsContext = createContext()
 
 const CoinsProvider = ({ children }) => {
     const [coins, setCoins] = useState([])
+    const [slicedCoins, setSlicedCoins] = useState([])
     const [isCoinModalOpen, setIsCoinModalOpen] = useState(false)
     const [isAddCoinMode, setIsAddCoinMode] = useState(true)
     const [errorMessage, setErrorMessage] = useState('')
 
-    const { data, refetch } = useQuery(QUERY_COINS)
+    const { data, refetch, loading, error } = useQuery(QUERY_COINS)
     const [addCoin] = useMutation(ADD_COIN)
     const [updateCoin] = useMutation(UPDATE_COIN)
     const [removeCoin] = useMutation(REMOVE_COIN)
@@ -83,13 +84,14 @@ const CoinsProvider = ({ children }) => {
             const { data } = await API.getCoins()
             const slicedCoins = data?.slice(0, 10)
 
-            setCoins(slicedCoins)
+            setSlicedCoins(slicedCoins)
+            setCoins(data)
         })()
     }, [])
 
     const _coins = Auth.loggedIn()
         ? filterUserCoins(coins, data?.user?.coins)
-        : coins
+        : []
 
     const value = {
         isCoinModalOpen,
@@ -103,7 +105,11 @@ const CoinsProvider = ({ children }) => {
         updateCoinSubmitHandler,
         removeCoinHandler,
         errorMessage,
-        coins: _coins,
+        setErrorMessage,
+        coins,
+        slicedCoins,
+        userCoins: _coins,
+        isLoading: loading,
     }
 
     return (

@@ -5,18 +5,8 @@ const {
 } = require('apollo-server-express')
 const { User } = require('../models')
 const { signToken } = require('../utils/auth')
-const { COIN_LIST } = require('../utils/coinList')
-
-const isValidCoin = coin =>
-    COIN_LIST.map(coin => coin.toLowerCase()).includes(coin?.toLowerCase())
-
-const isCoinIncludes = (coin, coins) => {
-    const lowercaseCoin = coin?.trim()?.toLowerCase()
-    console.log({ lowercaseCoin })
-    const isIncludes = coins?.includes(lowercaseCoin)
-    console.log({ isIncludes })
-    return isIncludes
-}
+const includesCoin = require('../utils/includesCoin')
+const isValidCoin = require('../utils/isValidCoin')
 
 const resolvers = {
     Query: {
@@ -25,8 +15,6 @@ const resolvers = {
         },
         user: async (parent, data, { user, isAuthenticated }) => {
             if (!isAuthenticated) throw new ForbiddenError('Unauthorized!')
-            await User.findById(user._id)
-            console.log('user', user)
             return user
         },
     },
@@ -66,7 +54,7 @@ const resolvers = {
 
             const lowercaseCoin = coin?.toLowerCase()
 
-            if (user.coins?.includes(lowercaseCoin)) {
+            if (includesCoin(coin, user.coins)) {
                 throw new UserInputError(`${lowercaseCoin} already has taken!`)
             }
 
@@ -88,10 +76,10 @@ const resolvers = {
         ) => {
             if (!isAuthenticated) throw new ForbiddenError('Unauthorized!')
 
-            if (!isCoinIncludes(coin, user.coins)) {
+            if (!includesCoin(coin, user.coins)) {
                 throw new UserInputError(`${coin} doesn't exist`)
             }
-            if (isCoinIncludes(newCoin, user.coins)) {
+            if (includesCoin(newCoin, user.coins)) {
                 throw new UserInputError(`${coin} already has taken!`)
             }
 
